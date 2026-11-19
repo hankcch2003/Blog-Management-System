@@ -8,7 +8,8 @@
 # .NET build output
 [Bb]in/
 [Oo]bj/
-artifacts/
+TestResults/
+publish/
 
 # NuGet packages
 *.nupkg
@@ -22,7 +23,6 @@ node_modules/
 .env.*
 !.env.example
 secrets.json
-appsettings.Development.json
 
 # SQL Server database files
 *.mdf
@@ -30,14 +30,11 @@ appsettings.Development.json
 *.ndf
 *.bak
 
-# Logs
+# Logs and cache
 *.log
+*.cache
 
 # Operating system files
 .DS_Store
 Thumbs.db
 Desktop.ini
-
-# Development uploads
-wwwroot/uploads/*
-!wwwroot/uploads/.gitkeep
