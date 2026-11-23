@@ -1,5 +1,6 @@
-# Blog Management System
-### Full-Stack Web Development Portfolio Project
+# Blog Management System (部落格管理系統)
+
+---
 
 使用 Vue 3、ASP.NET Core Web API、Entity Framework Core 與 Microsoft SQL Server 建置的全端部落格管理系統。
 
