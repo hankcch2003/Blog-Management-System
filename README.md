@@ -1,7 +1,5 @@
 # Blog Management System (部落格管理系統)
 
----
-
 使用 Vue 3、ASP.NET Core Web API、Entity Framework Core 與 Microsoft SQL Server 建置的全端部落格管理系統。
 
 本專案是個人全端網頁開發作品集，透過實際開發一套 Blog Management System，整合前端網頁、後端 RESTful API 與關聯式資料庫，練習完整的全端開發流程，並作為求職面試時展示程式設計能力、系統整合經驗及問題排除能力的作品。
