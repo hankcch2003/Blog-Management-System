@@ -2,7 +2,9 @@
 
 使用 Vue 3、ASP.NET Core Web API、Entity Framework Core 與 Microsoft SQL Server 建置的全端部落格管理系統。
 
-本專案是個人全端網頁開發作品集，透過實際開發一套 Blog Management System，整合前端網頁、後端 RESTful API 與關聯式資料庫，練習完整的全端開發流程，並作為求職面試時展示程式設計能力、系統整合經驗及問題排除能力的作品。
+本專案為個人全端網頁開發作品，主要實作文章與分類管理功能，透過前端網頁、後端 RESTful API 與關聯式資料庫的整合，練習完整的全端開發流程。
+
+開發過程包含資料庫設計、API 開發、前端頁面實作、前後端串接、資料驗證、錯誤處理及測試，並使用 Git 與 GitHub 管理專案程式碼。
 
 ---
 
@@ -14,18 +16,19 @@
 
 前端使用 Vue 3 建置，透過 Axios 呼叫 ASP.NET Core Web API；後端使用 Entity Framework Core 操作 Microsoft SQL Server，完成資料新增、查詢、修改及刪除。
 
-除了基本 CRUD 功能，也特別處理資料驗證、錯誤回應、資料表關聯、跨來源資源分享（CORS）、響應式網頁設計（RWD）及前後端整合測試。
+除了基本 CRUD 功能，也處理資料驗證、錯誤回應、資料表關聯、跨來源資源分享（CORS）、響應式網頁設計（RWD）及前後端整合測試。
 
 ### 專案目標
 
-- 建立完整的前端、後端與資料庫整合架構。
-- 熟悉 ASP.NET Core Web API 的 Controller、Service、DTO 分層設計。
-- 使用 Entity Framework Core 管理資料庫及 Migration。
-- 使用 Vue 3 製作互動式網頁及管理介面。
-- 實作文章與分類的完整 CRUD 操作。
-- 練習 API 輸入驗證、HTTP Status Code 及錯誤處理。
-- 使用 Postman、Swagger、SSMS 及瀏覽器開發者工具進行測試。
-- 使用 Git 與 GitHub 管理原始碼及展示開發成果。
+- 建立前端、後端與資料庫整合架構。
+- 使用 Vue 3 建立文章瀏覽及管理介面。
+- 使用 ASP.NET Core Web API 開發 RESTful API。
+- 使用 Controller、Service、DTO 整理後端程式架構。
+- 使用 Entity Framework Core 操作 SQL Server。
+- 實作文章與分類的 CRUD 功能。
+- 處理 API 輸入驗證及常見錯誤回應。
+- 使用 Swagger、Postman 與 SSMS 進行測試。
+- 使用 Git 與 GitHub 管理專案程式碼。
 
 ---
 
@@ -50,7 +53,7 @@
 | 原始碼管理 | GitHub |
 | 開發環境 | Visual Studio、Visual Studio Code |
 
-以上為本專案實際使用的主要技術與工具。
+以上為本專案使用的主要技術與工具。
 
 ---
 
@@ -95,7 +98,7 @@
 - 修改文章內容。
 - 刪除文章。
 - 設定文章發布狀態。
-- 根據文章發布狀態更新 PublishedAt。
+- 依據文章發布狀態管理 PublishedAt。
 - 指定文章所屬分類。
 - 驗證必填欄位及分類編號。
 
@@ -162,29 +165,30 @@
           HTML / CSS / JavaScript
                    |
                    v
-              Axios
+                Axios
                    |
                    | HTTP Request / JSON
                    |
                    v
         ASP.NET Core Web API
                    |
-          +--------+--------+
-          |                 |
-          v                 v
-     Controllers         DTOs
-          |
-          v
-       Services
-          |
-          v
- Entity Framework Core
-          |
-          v
-    Microsoft SQL Server
-          |
-          v
-       Database
+                   v
+              Controllers
+                   |
+                   v
+                  DTOs
+                   |
+                   v
+                Services
+                   |
+                   v
+       Entity Framework Core
+                   |
+                   v
+         Microsoft SQL Server
+                   |
+                   v
+                Database
 ```
 
 ### 前端架構
@@ -228,7 +232,6 @@ CreatedAt
       |
       | 1
       |
-      | 
       | N
 Posts
 -----------
@@ -243,12 +246,12 @@ PublishedAt
 CategoryId (FK)
 ```
 
-資料表關聯為：
+資料表關聯：
 
 - 一個 Category 可以對應多篇 Post。
-- 一篇 Post 必須關聯一個 Category。
-- CategoryId 為 Posts 的外鍵。
-- 刪除仍有文章關聯的分類時，API 會回傳 HTTP 409 Conflict，避免破壞資料關聯。
+- 每篇 Post 透過 CategoryId 關聯至一個 Category。
+- Posts.CategoryId 為外鍵。
+- 刪除仍有文章關聯的分類時，API 會回傳 HTTP 409 Conflict，避免破壞既有資料關聯。
 
 ---
 
@@ -269,21 +272,21 @@ CategoryId (FK)
 
 ### 輸入驗證
 
-透過 DTO 與 Data Annotations 處理資料驗證。
+使用 DTO 與 Data Annotations 處理 API 輸入資料驗證。
 
 Category：
 
-- Name 必填，最大長度 100 字元。
+- Name 為必填欄位，最大長度 100 字元。
 - Description 最大長度 500 字元。
 
 Post：
 
-- Title 必填，最大長度 200 字元。
-- Content 必填。
+- Title 為必填欄位，最大長度 200 字元。
+- Content 為必填欄位。
 - Summary 最大長度 500 字元。
 - CategoryId 必須為有效的正整數。
 
-透過驗證機制減少不正確資料進入資料庫的情況。
+透過上述驗證，避免不符合欄位規則的資料進入後續處理流程。
 
 ### 資料完整性
 
@@ -556,13 +559,13 @@ Frontend/blog-management-frontend/src/services/api.js
 
 ---
 
-## 九、測試與驗收紀錄
+## 九、測試與驗證紀錄
 
-本專案不只完成畫面與 API 開發，也進行前後端整合及系統測試。
+本專案在開發過程中進行 API 測試、資料庫檢查及前後端整合測試，確認主要功能是否能正常運作。
 
 ### 1. Swagger API 測試
 
-使用 Swagger 驗證：
+使用 Swagger 測試以下功能：
 
 - Categories CRUD。
 - Posts CRUD。
@@ -603,11 +606,13 @@ Postman Collection Runner 測試結果：
 | 通過 | 55 |
 | 失敗 | 0 |
 
+以上為本次 Postman Collection 的測試結果。
+
 ### 3. 錯誤處理與資料完整性測試
 
 已驗證以下情境：
 
-| 測試情境 | 預期結果 | 驗收結果 |
+| 測試情境 | 預期結果 | 測試結果 |
 |---|---|---|
 | 查詢不存在的文章 | 404 Not Found | 通過 |
 | 新增無效分類編號的文章 | 400 Bad Request | 通過 |
@@ -615,13 +620,13 @@ Postman Collection Runner 測試結果：
 | 無效欄位資料 | 400 Bad Request | 通過 |
 | 正常 CRUD 操作 | 正確完成資料操作 | 通過 |
 
-並透過 SQL Server Management Studio 檢查資料表內容與外鍵關聯，確認沒有孤立文章資料。
+並透過 SQL Server Management Studio 檢查資料表內容與外鍵關聯，確認資料關聯符合預期。
 
 ### 4. 前後端整合測試
 
-- 前端成功呼叫後端 API。
+- 前端可以呼叫後端 API。
 - CORS 設定正常。
-- 新增、查詢、修改及刪除功能正常。
+- 新增、查詢、修改及刪除功能可以正常操作。
 - 文章發布狀態及分類資料正確。
 - API 錯誤能在前端適當呈現。
 - 資料庫內容與前端操作結果一致。
@@ -642,9 +647,9 @@ Postman Collection Runner 測試結果：
 - Microsoft Edge
 - Mozilla Firefox
 
-已檢查首頁、文章列表、文章詳細頁及分類管理頁面，確認主要功能與不同尺寸版面正常。
+檢查首頁、文章列表、文章詳細頁及分類管理頁面，確認主要功能與不同尺寸的版面顯示。
 
-### 6. 建置驗收
+### 6. 建置驗證
 
 後端：
 
@@ -658,7 +663,7 @@ dotnet build -c Release
 npm run build
 ```
 
-兩者皆已完成建置驗收。
+兩者皆已完成建置驗證。
 
 ---
 
@@ -683,7 +688,7 @@ npm run build
 
 **驗證結果：**
 
-前端可以正常取得後端 API 資料，沒有 CORS 錯誤。
+完成 CORS 設定後，透過瀏覽器確認前端可以正常呼叫後端 API。
 
 ### 2. 文章與分類的外鍵關聯
 
@@ -703,7 +708,7 @@ npm run build
 
 **驗證結果：**
 
-無效分類編號會被拒絕，仍有文章使用的分類也無法直接刪除，資料關聯維持完整。
+測試確認無效分類編號會被拒絕，且仍有文章關聯的分類無法直接刪除。
 
 ### 3. API 輸入驗證與錯誤回應
 
@@ -711,7 +716,7 @@ npm run build
 
 使用者可能傳入空白標題、超過欄位長度的資料、不存在的文章 ID 或無效分類編號。
 
-若缺少驗證，可能導致錯誤資料進入資料庫，或讓 API 回傳不適當的錯誤。
+若缺少驗證，可能導致不符合規則的資料進入後續處理流程，或讓 API 回傳不適當的錯誤。
 
 **處理方式：**
 
@@ -724,7 +729,7 @@ npm run build
 
 **驗證結果：**
 
-透過 Swagger、Postman 與前端操作確認不同錯誤情境皆能正常處理。
+透過 Swagger、Postman 與前端操作確認不同錯誤情境能依照預期回應。
 
 ### 4. 前端 API 請求與畫面狀態
 
@@ -743,7 +748,7 @@ npm run build
 
 **驗證結果：**
 
-不同 API 狀態均能在前端頁面適當呈現。
+針對載入中、查無資料及 API 錯誤等情況，調整前端頁面的顯示方式。
 
 ### 5. RWD 不同螢幕尺寸的版面調整
 
@@ -759,7 +764,7 @@ npm run build
 
 **驗證結果：**
 
-1440、768 及 375 像素寬度的主要頁面均通過版面檢查，沒有水平溢位問題。
+針對 1440、768 及 375 像素寬度進行版面檢查，確認主要頁面的顯示情況。
 
 ### 6. Git 換行格式提示（LF / CRLF）
 
@@ -812,7 +817,7 @@ git check-ignore -v Backend/BlogManagement.Api/BlogManagement.Api/appsettings.js
 
 **驗證結果：**
 
-本機 `appsettings.json`、.NET 建置產物、前端 `node_modules` 與 `dist` 均未加入此次 Commit。
+確認本機 `appsettings.json`、.NET 建置產物、前端 `node_modules` 與 `dist` 未加入本次 Commit。
 
 ---
 
@@ -839,10 +844,10 @@ git diff
 ### 3. 加入 Git 暫存區
 
 ```bash
-git add .gitignore Backend/ Frontend/ Screenshots/
+git add README.md .gitignore Backend/ Frontend/ Screenshots/
 ```
 
-明確指定要上傳的專案資料夾及設定檔。
+明確指定要加入暫存區的專案資料夾及檔案。
 
 ### 4. 檢查暫存內容
 
@@ -887,34 +892,34 @@ Your branch is up to date with 'origin/main'.
 nothing to commit, working tree clean
 ```
 
-本次專案已完成從本機 Git 管理到 GitHub 公開 Repository 的完整流程。
+完成專案程式碼的 Commit 與 Push，並確認本機分支與 GitHub 遠端 Repository 同步。
 
 ---
 
 ## 十二、專案成果與學習心得
 
-透過這次 Blog Management System 的開發，實際完成一套具有前端、後端及資料庫的全端網頁應用程式。
+本專案完成了一套以文章及分類管理為主要功能的全端網頁系統，包含 Vue 3 前端、ASP.NET Core Web API 後端，以及 Microsoft SQL Server 資料庫。
 
-過程中不只是完成 CRUD，也實際練習了：
+在開發過程中，實際進行了以下工作：
 
-1. 使用 Vue 3 建立前端頁面與元件。
-2. 使用 Vue Router 管理不同頁面。
-3. 使用 Axios 串接 RESTful API。
-4. 使用 ASP.NET Core Web API 建立後端服務。
-5. 使用 Controller、Service、DTO 分層整理程式碼。
+1. 使用 Vue 3 建立前端頁面及共用元件。
+2. 使用 Vue Router 管理前端頁面路由。
+3. 使用 Axios 串接後端 API。
+4. 使用 ASP.NET Core Web API 開發文章及分類管理功能。
+5. 使用 Controller、Service 與 DTO 整理後端程式。
 6. 使用 Entity Framework Core 操作 SQL Server。
-7. 使用 Migration 管理資料庫結構。
-8. 設計資料表外鍵及一對多關聯。
-9. 處理 API 輸入驗證與 HTTP 錯誤回應。
-10. 設定 CORS 並完成前後端整合。
-11. 使用 Postman 進行 API 自動化測試。
-12. 使用 SSMS 確認資料庫內容及資料完整性。
-13. 測試 RWD 與不同瀏覽器的操作結果。
-14. 使用 Git 與 GitHub 管理及公開專案。
+7. 使用 Migration 建立及管理資料庫結構。
+8. 設定文章與分類之間的外鍵關聯。
+9. 處理 API 欄位驗證及錯誤回應。
+10. 設定 CORS 並測試前後端連線。
+11. 使用 Swagger 與 Postman 測試 API。
+12. 使用 SSMS 檢查資料庫資料及關聯。
+13. 調整前端 RWD 版面。
+14. 使用 Git 與 GitHub 管理專案程式碼。
 
-這次實作讓我更了解一個完整網頁系統從資料庫設計、後端 API、前端畫面到整合測試及版本控制的開發流程。
+透過這次開發，對前端、後端及資料庫之間的資料傳遞方式有了更具體的了解，也實際遇到並處理了 API 驗證、跨來源請求及資料表關聯等問題。
 
-未來也會持續改善程式碼結構、增加功能及累積更多實際開發經驗。
+目前系統以文章及分類管理為主要範圍，後續仍可依需求增加其他功能。
 
 ---
 
@@ -926,7 +931,7 @@ nothing to commit, working tree clean
 Screenshots/
 ```
 
-目前共保存 **42 張正式截圖**，包含：
+目前共保存 42 張專案開發與測試截圖，內容包含：
 
 - Swagger API 操作與測試。
 - Categories CRUD。
@@ -938,17 +943,6 @@ Screenshots/
 - 分類管理。
 - 文章新增、查詢、修改及刪除。
 
-可直接進入 GitHub Repository 的 Screenshots 資料夾瀏覽：
+可透過以下連結瀏覽：
 
 [View Project Screenshots](https://github.com/hankcch2003/Blog-Management-System/tree/main/Screenshots)
-
----
-
-## 十四、GitHub Repository
-
-**Project Name:** Blog-Management-System
-
-**GitHub:**  
-https://github.com/hankcch2003/Blog-Management-System
-
-本專案作為個人全端開發作品集，記錄從需求規劃、資料庫設計、API 開發、前端實作、系統整合、測試驗收到 GitHub 版本控制的完整實作歷程。
